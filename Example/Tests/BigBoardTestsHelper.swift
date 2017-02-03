@@ -43,5 +43,19 @@ class BigBoardTestsHelper: NSObject {
         sampleStock!.name = "GOOGLE"
         return sampleStock!
     }
+    
+    class func sampleIndex() -> BigBoardStock {
+        let sampleIndex = BigBoardStock(map: Map(mappingType: .toJSON, JSON: [:]))
+        sampleIndex!.symbol = "^DJX"
+        sampleIndex!.name = "Dow Jones"
+        return sampleIndex!
+    }
+    
+    class func sampleCurrencyPair() -> BigBoardStock {
+        let sampleCurrencyPair = BigBoardStock(map: Map(mappingType: .toJSON, JSON: [:]))
+        sampleCurrencyPair!.symbol = "EURAUD"
+        sampleCurrencyPair!.name = "Euro / Dollar"
+        return sampleCurrencyPair!
+    }
 
 }

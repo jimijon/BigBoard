@@ -55,6 +55,19 @@ open class BigBoard: NSObject {
         return BigBoardRequestManager.stocksContainingSearchTerm(searchTerm: searchTerm, success: success, failure: failure)
     }
     
+    /*
+     Calls the BigBoardRequestManager class to map BigBoardSearchResultCurrencyPair objects based on the provided search term.
+     @param searchTerm: The search term to use to perform the mapping
+     @param success: The callback that is called if the mapping was successfull
+     @param failure: The callback that is called if the mapping failed
+     */
+    
+    open class func currencyPairsContainingSearchTerm(searchTerm:String, success:@escaping (([BigBoardSearchResultStock]) -> Void), failure:@escaping ((BigBoardError) -> Void)) -> DataRequest? {
+        return BigBoardRequestManager.stocksContainingSearchTerm(searchTerm: searchTerm, success: success, failure: failure)
+    }
+    
+    
+    
     
     /*
         Calls the BigBoardRequestManager class to map the 25 most recent items for an RSS feed for the given stock symbol.

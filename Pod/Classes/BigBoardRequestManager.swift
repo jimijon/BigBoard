@@ -278,6 +278,27 @@ class BigBoardRequestManager: NSObject {
         })
     }
     
+    /*
+     Maps BigBoardSearchResultStock objects based on the provided search term.
+     @param searchTerm: The search term to use to perform the mapping
+     @param success: The callback that is called if the mapping was successfull
+     @param failure: The callback that is called if the mapping failed
+     */
+    
+    class func currencyPairsContainingSearchTerm(searchTerm:String, success:@escaping (([BigBoardSearchResultStock]) -> Void), failure:@escaping ((BigBoardError) -> Void)) -> DataRequest? {
+        
+        let urlString = BigBoardUrlCreator.urlForAutoCompleteSearch(searchTerm: searchTerm)
+        
+        return generalRequest(.get, urlString: urlString).responseArray(queue: nil, keyPath: "ResultSet.Result", completionHandler: { (response:DataResponse<[BigBoardSearchResultStock]>) in
+            
+            switch response.result {
+            case .success: success(response.result.value!)
+            case .failure(let error): callErrorCallback(failure: failure, error: error as NSError)
+            }
+        })
+    }
+    
+    
     
     /*
         Maps the 25 most recent items for an RSS feed for the given stock symbol.

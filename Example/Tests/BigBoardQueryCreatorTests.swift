@@ -94,4 +94,25 @@ class BigBoardQueryCreatorTests: XCTestCase {
         XCTAssertEqual(bigBoardUrl, yqlUrl)
     }
     
+    
+    //Mark: - Other Asset Types
+    
+//    func testThatUrlStringIsCorrectlyCreatedForOneIndexSymbol() {
+//        let bigBoardUrl = BigBoardUrlCreator.urlForIndexSymbol(symbol:BigBoardTestsHelper.sampleIndex().symbol!)
+//        let yqlUrl = "http://chart.finance.yahoo.com/z?s=GOOG&t=6m&q=l&l=on&z=s&p=m5,m30,m60,m120"
+//        XCTAssertEqual(bigBoardUrl, yqlUrl)
+//    }
+    
+    
+//    https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20csv%20where%20url%3D%22http%3A%2F%2Ffinance.yahoo.com%2Fd%2Fquotes.csv%3Fe%3D.csv%26f%3Dnl1d1t1%26s%3Dusdeur%3DX%22%3B&format=json&callback=
+    
+    func testThatUrlStringIsCorrectlyCreatedForOneCurrencyPairSymbol() {
+        let bigBoardUrl = BigBoardUrlCreator.urlForCurrencyPairSymbol(symbol:BigBoardTestsHelper.sampleCurrencyPair().symbol!)
+        
+        let yqlUrl = "http://query.yahooapis.com/v1/public/yql?q=SELECT%20*%20FROM%20yahoo.finance.xchange%20WHERE%20pair%20IN%20('EURAUD')&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback="
+        
+        XCTAssertEqual(bigBoardUrl, yqlUrl)
+    }
+    
+    
 }

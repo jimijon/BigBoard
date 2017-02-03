@@ -21,6 +21,7 @@ import Foundation
 private enum BigBoardQueryType : String {
     case Symbol = "SELECT * FROM yahoo.finance.quotes WHERE symbol IN"
     case HistoricalData = "SELECT * FROM yahoo.finance.historicaldata WHERE symbol IN"
+    case CurrencyPair = "SELECT * FROM yahoo.finance.xchange WHERE pair IN"
 }
 
 class BigBoardUrlCreator: NSObject {
@@ -46,7 +47,9 @@ class BigBoardUrlCreator: NSObject {
     fileprivate class func queryForStockSymbols(symbols:[String], queryType:BigBoardQueryType) -> String {
         var symbolsArray = symbols
         for symbol in symbolsArray {
-            symbolsArray[symbols.index(of: symbol)!] = "'\(symbol)'".uppercased()
+//            symbolsArray[symbols.index(of: symbol)!] = "'\(symbol)'".uppercased()
+            symbolsArray[symbols.index(of: symbol)!] = "\(symbol)".uppercased()
+
         }
         
         let symbolsString = symbolsArray.joined(separator: ",")
@@ -113,6 +116,16 @@ class BigBoardUrlCreator: NSObject {
         return "http://autoc.finance.yahoo.com/autoc?query=\(percentEscapedQuery(query: searchTerm))&region=2&lang=en"
     }
     
+    /*  Returns a URL for an autocomplete search containg the given search term
+     @param searchTerm: The term you are looking to contain
+     */
+    
+    class func urlForAutoCompleteSearchCurrencyPairs(searchTerm:String) -> String {
+        return "http://autoc.finance.yahoo.com/autoc?query=\(percentEscapedQuery(query: searchTerm))&region=2&lang=en"
+    }
+    
+    
+    
     /*
         Returns a URL for a graph image for a given stock
         @param stock: Stock you want to load the graph for
@@ -134,6 +147,79 @@ class BigBoardUrlCreator: NSObject {
         return "http://chart.finance.yahoo.com/z?s=\(stock.symbol!)&t=\(timelineInMonths)m&q=l&l=on&z=s&p=\(trendlines.componentsJoined(by: ","))"
     }
     
+    
+    /*  Returns a URL for a single stock with the provided symbol
+     @param symbol: The stock symbol of the desired stock. Google -> GOOG, Tesla -> TSLA, etc...
+     */
+    
+    class func urlForCurrencyPairSymbol(symbol:String) -> String {
+        return urlForCurrencyPairSymbols(symbols: [symbol])
+    }
+    
+    
+    /*  Returns a URL for multiple stocks with the given symbols
+     @param symbols: An array of stock symbols for the desired stocks. Google -> GOOG, Tesla -> TSLA, etc...
+     */
+    
+    class func urlForCurrencyPairSymbols(symbols:[String]) -> String {
+        let symbolsQuery = queryForCurrencyPairSymbols(symbols: symbols, queryType: .CurrencyPair)
+        return "\(YQL_URL_PREFIX)\(symbolsQuery)\(YQL_URL_SUFFIX)"
+    }
+    
+    /*  Returns a query for multiple stocks with the given symbols
+     @param symbols: An array of stock symbols for the desired stocks. Google -> GOOG, Tesla -> TSLA, etc...
+     */
+    
+    fileprivate class func queryForCurrencyPairSymbols(symbols:[String], queryType:BigBoardQueryType) -> String {
+        var symbolsArray = symbols
+        for symbol in symbolsArray {
+            symbolsArray[symbols.index(of: symbol)!] = "'\(symbol)'".uppercased()
+        }
+        
+        let symbolsString = symbolsArray.joined(separator: ",")
+        return percentEscapedQuery(query: "\(queryType.rawValue) (\(symbolsString))")
+    }
+    
+    
+    
+    
+    /*  Returns a URL for a single stock with the provided symbol
+     @param symbol: The stock symbol of the desired stock. Google -> GOOG, Tesla -> TSLA, etc...
+     */
+    
+    class func urlForIndexSymbol(symbol:String) -> String {
+        return urlForIndexSymbols(symbols: [symbol])
+    }
+    
+    
+    /*  Returns a URL for multiple stocks with the given symbols
+     @param symbols: An array of stock symbols for the desired stocks. Google -> GOOG, Tesla -> TSLA, etc...
+     */
+    
+    class func urlForIndexSymbols(symbols:[String]) -> String {
+        let symbolsQuery = queryForIndexSymbols(symbols: symbols, queryType: .CurrencyPair)
+        return "\(YQL_URL_PREFIX)\(symbolsQuery)\(YQL_URL_SUFFIX)"
+    }
+    
+    /*  Returns a query for multiple stocks with the given symbols
+     @param symbols: An array of stock symbols for the desired stocks. Google -> GOOG, Tesla -> TSLA, etc...
+     */
+    
+    fileprivate class func queryForIndexSymbols(symbols:[String], queryType:BigBoardQueryType) -> String {
+        var symbolsArray = symbols
+        for symbol in symbolsArray {
+            symbolsArray[symbols.index(of: symbol)!] = "'\(symbol)'".uppercased()
+        }
+        
+        let symbolsString = symbolsArray.joined(separator: ",")
+        return percentEscapedQuery(query: "\(queryType.rawValue) (\(symbolsString))")
+    }
+    
+    
+    
+    
+    
+    
     class func urlForRSSFeed(symbol:String) -> String {
         return urlForRSSFeed(symbols: [symbol])
     }
@@ -150,5 +236,14 @@ class BigBoardUrlCreator: NSObject {
     fileprivate class func percentEscapedQuery(query:String) -> String {
         return query.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
     }
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
 }
