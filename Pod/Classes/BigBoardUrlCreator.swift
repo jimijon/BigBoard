@@ -24,7 +24,7 @@ private enum BigBoardQueryType : String {
     case CurrencyPair = "SELECT * FROM yahoo.finance.xchange WHERE pair IN"
 }
 
-class BigBoardUrlCreator: NSObject {
+public class BigBoardUrlCreator: NSObject {
 
     // MARK: Base YQL URL Strings
     fileprivate static let YQL_URL_PREFIX:String = "http://query.yahooapis.com/v1/public/yql?q="
