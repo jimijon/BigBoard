@@ -20,7 +20,7 @@ import Alamofire
 import ObjectMapper
 import AlamofireObjectMapper
 
-class BigBoardRequestManager: NSObject {
+public class BigBoardRequestManager: NSObject {
 
     fileprivate static var _manager:Alamofire.SessionManager?
     class var manager:Alamofire.SessionManager {
@@ -226,7 +226,7 @@ class BigBoardRequestManager: NSObject {
         @param failure: The callback that is called if the mapping failed
     */
     
-    class func mapChartDataModuleForStockWithSymbol(symbol:String, range:BigBoardChartDataModuleRange, success:@escaping ((BigBoardChartDataModule) -> Void), failure:@escaping (BigBoardError) -> Void) -> DataRequest? {
+    public class func mapChartDataModuleForStockWithSymbol(symbol:String, range:BigBoardChartDataModuleRange, success:@escaping ((BigBoardChartDataModule) -> Void), failure:@escaping (BigBoardError) -> Void) -> DataRequest? {
         let urlString = BigBoardUrlCreator.urlForChartDataModuleWithSymbol(symbol: symbol, range: range)
         return generalRequest(.get, urlString: urlString).responseData(queue: nil) { (response:DataResponse<Data>) in
             
@@ -250,8 +250,13 @@ class BigBoardRequestManager: NSObject {
                     let trimmedJsonStringData:Data = trimmedJsonString.data(using: .utf8)!
                     let formattedJson = try? JSONSerialization.jsonObject(with: trimmedJsonStringData, options: .mutableContainers)
                     
+                    if (formattedJson != nil){
                     let module = BigBoardChartDataModule(map: Map(mappingType: .fromJSON, JSON: formattedJson as! [String : Any]))!
-                    success(module)
+                        success(module)
+
+                    }else{
+                        //
+                    }
                 
                 case .failure(let error): callErrorCallback(failure: failure, error: error as NSError)
             }
